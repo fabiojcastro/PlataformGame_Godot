@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://resources/floor.tres" type="TileSet" id=1]
+[ext_resource path="res://scenes/env/background.tscn" type="PackedScene" id=2]
+[ext_resource path="res://resources/normal_decoration.tres" type="TileSet" id=3]
+[ext_resource path="res://resources/small_decoration_tile.tres" type="TileSet" id=4]
+[ext_resource path="res://scenes/mask.tscn" type="PackedScene" id=5]
+[ext_resource path="res://scenes/player/player.tscn" type="PackedScene" id=6]
+
+[node name="Level" type="Node2D"]
+
+[node name="LevelDesign" type="Node2D" parent="."]
+
+[node name="Floor" type="TileMap" parent="LevelDesign"]
+tile_set = ExtResource( 1 )
+cell_size = Vector2( 32, 32 )
+format = 1
+tile_data = PoolIntArray( 458752, 2, 0, 458753, 2, 1, 458754, 2, 1, 458755, 2, 1, 458756, 2, 1, 458757, 2, 1, 458758, 2, 1, 458759, 2, 1, 458760, 2, 1, 458761, 2, 1, 458762, 2, 1, 458763, 2, 1, 458764, 2, 1, 458765, 2, 2, 458768, 2, 0, 458769, 2, 1, 458770, 2, 1, 458771, 2, 2, 524288, 2, 65536, 524289, 2, 65537, 524290, 2, 65537, 524291, 2, 65537, 524292, 2, 65537, 524293, 2, 65537, 524294, 2, 65537, 524295, 2, 65537, 524296, 2, 65537, 524297, 2, 65537, 524298, 2, 65537, 524299, 2, 65537, 524300, 2, 65537, 524301, 2, 65538, 524304, 2, 65536, 524305, 2, 65537, 524306, 2, 65537, 524307, 2, 65538, 589824, 2, 131072, 589825, 2, 131073, 589826, 2, 131073, 589827, 2, 131073, 589828, 2, 131073, 589829, 2, 131073, 589830, 2, 131073, 589831, 2, 131073, 589832, 2, 131073, 589833, 2, 131073, 589834, 2, 131073, 589835, 2, 131073, 589836, 2, 131073, 589837, 2, 131074, 589840, 2, 131072, 589841, 2, 131073, 589842, 2, 131073, 589843, 2, 131074 )
+
+[node name="Decoration" type="TileMap" parent="LevelDesign"]
+tile_set = ExtResource( 3 )
+cell_size = Vector2( 32, 32 )
+format = 1
+tile_data = PoolIntArray( 327682, 2, 0, 393217, 3, 0, 393219, 1, 0, 393221, 1, 0, 393223, 1, 0, 393227, 3, 0, 393229, 4, 0, 393234, 5, 0 )
+
+[node name="SmallDecoration" type="TileMap" parent="LevelDesign"]
+tile_set = ExtResource( 4 )
+cell_size = Vector2( 16, 16 )
+format = 1
+tile_data = PoolIntArray( 851969, 1, 0, 851973, 0, 0, 851978, 1, 0, 851983, 0, 0, 851991, 0, 0, 851992, 1, 0, 852001, 0, 0, 852002, 0, 0 )
+
+[node name="Background" parent="LevelDesign" instance=ExtResource( 2 )]
+
+[node name="Mask" parent="." instance=ExtResource( 5 )]
+visible = false
+
+[node name="Player" parent="." instance=ExtResource( 6 )]
+position = Vector2( 24, 15 )
