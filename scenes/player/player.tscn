@@ -1,9 +1,10 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://scripts/player/player.gd" type="Script" id=1]
 [ext_resource path="res://assets/player/char_blue.png" type="Texture" id=2]
 [ext_resource path="res://scripts/player/player_texture.gd" type="Script" id=3]
 [ext_resource path="res://assets/effect/light.png" type="Texture" id=4]
+[ext_resource path="res://scripts/player/stats.gd" type="Script" id=5]
 
 [sub_resource type="RectangleShape2D" id=7]
 extents = Vector2( 6, 15.5 )
@@ -217,6 +218,22 @@ tracks/0/keys = {
 "values": [ 71, 72, 73 ]
 }
 
+[sub_resource type="Animation" id=16]
+resource_name = "dead"
+length = 1.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Texture:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 59 ]
+}
+
 [sub_resource type="Animation" id=4]
 resource_name = "fall"
 length = 0.4
@@ -232,6 +249,22 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 33, 33, 34, 35 ]
+}
+
+[sub_resource type="Animation" id=17]
+resource_name = "hit"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("Texture:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 40, 40, 41, 42 ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -411,13 +444,16 @@ frame = 1
 script = ExtResource( 3 )
 animation = NodePath("../AnimationPlayer")
 player = NodePath("..")
+attack_collision = NodePath("../AttackArea/Collision")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 1 )
 anims/attack_left = SubResource( 9 )
 anims/attack_right = SubResource( 10 )
 anims/crouch = SubResource( 11 )
+anims/dead = SubResource( 16 )
 anims/fall = SubResource( 4 )
+anims/hit = SubResource( 17 )
 anims/idle = SubResource( 2 )
 anims/jump = SubResource( 5 )
 anims/landing = SubResource( 6 )
@@ -451,4 +487,19 @@ autoplay = "light_animation"
 anims/RESET = SubResource( 14 )
 anims/light_animation = SubResource( 15 )
 
+[node name="Stats" type="Node" parent="."]
+script = ExtResource( 5 )
+player = NodePath("..")
+
+[node name="invencibilityTimer" type="Timer" parent="Stats"]
+one_shot = true
+
+[node name="CollisionArea" type="Area2D" parent="."]
+
+[node name="Collision" type="CollisionShape2D" parent="CollisionArea"]
+position = Vector2( -2, 25 )
+shape = SubResource( 7 )
+
 [connection signal="animation_finished" from="AnimationPlayer" to="Texture" method="_on_animation_finished"]
+[connection signal="timeout" from="Stats/invencibilityTimer" to="Stats" method="_on_invencibilityTimer_timeout"]
+[connection signal="area_entered" from="CollisionArea" to="Stats" method="_on_CollisionArea_area_entered"]

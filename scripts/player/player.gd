@@ -4,6 +4,7 @@ class_name Player
 # habilitar tipagem
 onready var player_sprite: Sprite = get_node("Texture")
 onready var wall_ray: RayCast2D = get_node("WallRay")
+onready var stats: Node = get_node("Stats")
 #criar o vetor de direção
 var velocity: Vector2 #(x, y)
 
@@ -13,6 +14,8 @@ var direction: int = 1
 #parte do pulo e queda
 var jump_count: int = 0
 
+var on_hit: bool = false
+var dead: bool = false
 var landing: bool = false
 var on_wall: bool = false
 var attacking: bool = false
@@ -77,18 +80,22 @@ func attack() -> void:
 func crouch() -> void:
 	if Input.is_action_pressed("crouch") and not defending and is_on_floor():
 		crouching = true
+		stats.shielding = false
 		can_track_input = false
 	elif not defending:
 		can_track_input = true
+		stats.shielding = false
 		crouching = false
 		player_sprite.crouching_off = true
 	
 func defense() -> void:
 	if Input.is_action_pressed("defense") and not crouching and is_on_floor():
 		defending = true
+		stats.shielding = true
 		can_track_input = false
 	elif not crouching:
 		defending = false
+		stats.shielding = false
 		can_track_input = true
 		player_sprite.shield_off = true
 

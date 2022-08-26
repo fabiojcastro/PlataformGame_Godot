@@ -1,6 +1,7 @@
 extends Sprite
 class_name PlayerTexture
 
+signal game_over
 var normal_attack: bool = false
 var suffix: String = "_right"
 var shield_off: bool = false
@@ -9,11 +10,14 @@ var crouching_off: bool = false
 #Linha para integrar o nó Animation Player, isso é necessário pois o Animation Player é filho e não pai, impedindo usar a função get_node direto.
 export(NodePath) onready var animation = get_node(animation) as AnimationPlayer
 export(NodePath) onready var player = get_node(player) as KinematicBody2D
+export(NodePath) onready var attack_collision = get_node(attack_collision) as CollisionShape2D
 #esta função foi criada no script do Player no pai.
 func animate(direction: Vector2) -> void:
 	verify_position(direction)
 	
-	if player.attacking or player.defending or player.crouching or player.next_to_wall():
+	if player.on_hit or player.dead:
+		hit_behavior()
+	elif player.attacking or player.defending or player.crouching or player.next_to_wall():
 		action_behavior()
 	elif direction.y != 0:
 		vertical_behavior(direction)
@@ -36,6 +40,14 @@ func verify_position(direction: Vector2) -> void:
 		position = Vector2(-2,0)
 		player.direction = 1
 		player.wall_ray.cast_to = Vector2(-7.5, 0)
+
+func hit_behavior() -> void:
+	player.set_physics_process(false)
+	attack_collision.set_deferred("disabled", true)
+	if player.dead:
+		animation.play("dead")
+	elif player.on_hit:
+		animation.play("hit")
 
 func action_behavior() -> void:
 	if player.next_to_wall():
@@ -77,6 +89,12 @@ func _on_animation_finished(anim_name: String):
 		"attack_right":
 			normal_attack = false
 			player.attacking = false
-			
-			
-	pass # Replace with function body.
+		"hit":
+			player.on_hit = false
+			player.set_physics_process(true)
+			if player.defending:
+				animation.play("shield")
+			if player.crouching:
+				animation.play("crouch")
+		"dead":
+			emit_signal("game_over")

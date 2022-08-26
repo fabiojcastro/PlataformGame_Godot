@@ -14,10 +14,25 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/env/background.gd"
 }, {
+"base": "Area2D",
+"class": "DetectionArea",
+"language": "GDScript",
+"path": "res://scripts/enemy/detection_area.gd"
+}, {
+"base": "Node2D",
+"class": "Level",
+"language": "GDScript",
+"path": "res://scripts/management/level.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Player",
 "language": "GDScript",
 "path": "res://scripts/player/player.gd"
+}, {
+"base": "Node",
+"class": "PlayerStats",
+"language": "GDScript",
+"path": "res://scripts/player/stats.gd"
 }, {
 "base": "Sprite",
 "class": "PlayerTexture",
@@ -26,7 +41,10 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Background": "",
+"DetectionArea": "",
+"Level": "",
 "Player": "",
+"PlayerStats": "",
 "PlayerTexture": ""
 }
 
