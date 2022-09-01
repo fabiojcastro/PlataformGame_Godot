@@ -98,18 +98,14 @@ func update_mana(type: String, value: int) -> void:
 			current_mana -= value	
 			
 func _process(delta) -> void:
-	if Input.is_action_just_pressed("ui_select"):
+	if Input.is_action_just_pressed("ui_up"):
 		update_health("Decrease", 5)
 
-
-func _on_collisionarea_area_entered(area):
+func _on_collisionarea_entered(area):
 	if area.name == "EnemyAttackArea":
 		update_health("Decrease", area.damage)
 		collision_area.set_deferred("monitoring", false)
 		invencibility_timer.start(area.invencibility_timer)
-	pass # Replace with function body.
-
 
 func _on_invencibilityTimer_timeout():
 	collision_area.set_deferred("monitoring", true)
-	pass # Replace with function body.

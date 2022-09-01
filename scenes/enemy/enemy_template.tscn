@@ -1,0 +1,57 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scripts/enemy/detection_area.gd" type="Script" id=1]
+[ext_resource path="res://scripts/enemy/enemy_template.gd" type="Script" id=2]
+[ext_resource path="res://scripts/enemy/enemy_texture.gd" type="Script" id=3]
+[ext_resource path="res://scripts/enemy/collision_area.gd" type="Script" id=4]
+
+[node name="EnemyTemplate" type="KinematicBody2D"]
+collision_layer = 8
+script = ExtResource( 2 )
+speed = 60
+gravity_speed = 350
+proximity_threshold = 15
+raycast_default_position = -33
+
+[node name="Texture" type="Sprite" parent="."]
+script = ExtResource( 3 )
+animation = NodePath("../Animation")
+enemy = NodePath("..")
+attack_area_collision = NodePath("../EnemyAttackArea/Collision")
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource( 1 )
+enemy = NodePath("..")
+
+[node name="Collision" type="CollisionShape2D" parent="DetectionArea"]
+
+[node name="EnemyAttackArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+
+[node name="Collision" type="CollisionShape2D" parent="EnemyAttackArea"]
+
+[node name="CollisionArea" type="Area2D" parent="."]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource( 4 )
+enemy = NodePath("..")
+health = 10
+
+[node name="Collision" type="CollisionShape2D" parent="CollisionArea"]
+
+[node name="Timer" type="Timer" parent="CollisionArea"]
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+
+[node name="FloorRay" type="RayCast2D" parent="."]
+
+[connection signal="body_entered" from="DetectionArea" to="DetectionArea" method="on_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="DetectionArea" method="on_body_exited"]
+[connection signal="area_entered" from="CollisionArea" to="CollisionArea" method="on_collision_area_entered"]
+[connection signal="body_entered" from="CollisionArea" to="CollisionArea" method="_on_collisionarea_entered"]
+[connection signal="animation_finished" from="Animation" to="Texture" method="on_animation_animation_finished"]

@@ -390,7 +390,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ 1.0 ]
+"values": [ 0.7 ]
 }
 
 [sub_resource type="Animation" id=15]
@@ -423,6 +423,8 @@ tracks/1/keys = {
 }
 
 [node name="Player" type="KinematicBody2D"]
+collision_layer = 4
+collision_mask = 3
 script = ExtResource( 1 )
 speed = 75
 jump_speed = -175
@@ -432,6 +434,7 @@ wall_gravity = 115
 wall_impulse_speed = 500
 
 [node name="Collision" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( -1, 12.5 )
 shape = SubResource( 7 )
 
@@ -468,19 +471,24 @@ drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 
 [node name="AttackArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
 
 [node name="Collision" type="CollisionShape2D" parent="AttackArea"]
 position = Vector2( 3.5, 5.5 )
+shape = SubResource( 8 )
 disabled = true
 
 [node name="WallRay" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 5.2, 0 )
+collision_mask = 3
 
 [node name="Light" type="Light2D" parent="."]
 texture = ExtResource( 4 )
 texture_scale = 0.3
 color = Color( 1, 1, 2, 1 )
+energy = 0.7
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Light"]
 autoplay = "light_animation"
@@ -490,16 +498,20 @@ anims/light_animation = SubResource( 15 )
 [node name="Stats" type="Node" parent="."]
 script = ExtResource( 5 )
 player = NodePath("..")
+collision_area = NodePath("../CollisionArea")
 
 [node name="invencibilityTimer" type="Timer" parent="Stats"]
 one_shot = true
 
 [node name="CollisionArea" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 0
 
 [node name="Collision" type="CollisionShape2D" parent="CollisionArea"]
-position = Vector2( -2, 25 )
+visible = false
+position = Vector2( -1, 12 )
 shape = SubResource( 7 )
 
 [connection signal="animation_finished" from="AnimationPlayer" to="Texture" method="_on_animation_finished"]
 [connection signal="timeout" from="Stats/invencibilityTimer" to="Stats" method="_on_invencibilityTimer_timeout"]
-[connection signal="area_entered" from="CollisionArea" to="Stats" method="_on_CollisionArea_area_entered"]
+[connection signal="area_entered" from="CollisionArea" to="Stats" method="_on_collisionarea_entered"]
