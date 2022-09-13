@@ -2,7 +2,7 @@ extends EnemyTexture
 class_name WhaleTexture
 
 func animate(velocity: Vector2) -> void:
-	if enemy.can_hit or enemy.can_die:
+	if enemy.can_hit or enemy.can_die or enemy.can_attack:
 		action_behavior()
 	else:
 		move_behavior(velocity)
@@ -15,7 +15,9 @@ func action_behavior() -> void:
 	elif enemy.can_hit:
 		animation.play("hit")
 		enemy.can_attack = false
-		
+	elif enemy.can_attack:
+		animation.play("attack")
+	
 		
 func move_behavior(velocity: Vector2) -> void:
 	if velocity.x != 0:
@@ -32,3 +34,7 @@ func on_animation_animation_finished(anim_name: String) -> void:
 		
 		"dead":
 			enemy.kill_enemy()
+		"kill":
+			enemy.queue_free()
+		"attack":
+			enemy.can_attack = false

@@ -22,6 +22,8 @@ var attacking: bool = false
 var defending: bool = false
 var crouching: bool = false
 
+var flipped: bool = false
+
 #flag para saber se o jogador pode se movimentar ou não, se uma das acima for true o debaixo fica false.
 var can_track_input: bool = true
 var not_on_wall: bool = true
@@ -60,6 +62,8 @@ func vertical_movement_env() -> void:
 		jump_count = 0
 	if Input.is_action_just_pressed("ui_select") and jump_count < 2 and can_track_input and not attacking:
 		jump_count += 1
+		#Chamando o efeito quando o player pular.
+		spawn_effect("res://scenes/effect/dust/jump.tscn", Vector2(0, 18), flipped)
 		if next_to_wall() and not is_on_floor():
 			velocity.y = wall_jump_speed
 			velocity.x += wall_impulse_speed * direction
@@ -120,4 +124,12 @@ func next_to_wall() -> bool:
 		not_on_wall = true
 		return false
 		
-	
+# Função que vai instanciar o efeito do player.
+func spawn_effect(effect_path: String, offset: Vector2, is_flipped: bool) -> void:
+	var effect_instance: EffectTemplate = load(effect_path).instance()
+	get_tree().root.call_deferred("add_child", effect_instance)
+	if is_flipped:
+		effect_instance.flip_h = true
+		
+	effect_instance.global_position = global_position + offset
+	effect_instance.play_effect()

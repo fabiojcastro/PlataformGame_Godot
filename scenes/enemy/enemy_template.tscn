@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scripts/enemy/detection_area.gd" type="Script" id=1]
 [ext_resource path="res://scripts/enemy/enemy_template.gd" type="Script" id=2]
 [ext_resource path="res://scripts/enemy/enemy_texture.gd" type="Script" id=3]
 [ext_resource path="res://scripts/enemy/collision_area.gd" type="Script" id=4]
+[ext_resource path="res://scripts/enemy/enemy_attack_area.gd" type="Script" id=5]
 
 [node name="EnemyTemplate" type="KinematicBody2D"]
 collision_layer = 8
@@ -32,6 +33,9 @@ enemy = NodePath("..")
 [node name="EnemyAttackArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
+script = ExtResource( 5 )
+damage = 3
+invencibility_timer = 1.0
 
 [node name="Collision" type="CollisionShape2D" parent="EnemyAttackArea"]
 
